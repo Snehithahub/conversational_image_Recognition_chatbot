@@ -4,7 +4,7 @@ from torchvision import models, transforms
 from PIL import Image
 import nltk
 from transformers import pipeline
-import random
+import requests
 from google.colab import files
 
 # Download nltk resources
@@ -22,8 +22,6 @@ image_model = models.resnet50(pretrained=True)
 image_model.eval()
 
 # Define labels for classification (using ImageNet classes as an example)
-# You can download ImageNet labels (https://raw.githubusercontent.com/anishathalye/imagenet-simple-labels/master/imagenet-simple-labels.json)
-import requests
 imagenet_labels = requests.get("https://raw.githubusercontent.com/anishathalye/imagenet-simple-labels/master/imagenet-simple-labels.json").json()
 
 # Load a pre-trained question-answering model (e.g., using Hugging Face's pipeline)
@@ -47,8 +45,9 @@ def analyze_image(image_path):
         # Update context with image description
         image_context['description'] = label
         image_context['image_path'] = image_path
-        # Optionally, add some details based on common image features
-        image_context['additional_info'] = "This appears to be a fashion item, possibly part of swimwear or clothing."
+        image_context['image_color'] = "mostly bright colors"  # Placeholder for color
+        image_context['contains_people'] = "yes" if "person" in label.lower() else "no"  # Check if the image contains a person
+        
         return f"I analyzed the image, and it appears to be: {label}."
     except Exception as e:
         return f"Sorry, I couldn't process the image. Error: {e}"
@@ -60,7 +59,13 @@ def answer_question(question):
     if 'description' not in image_context:
         return "I haven't analyzed any image yet. Please provide an image first."
     
-    # If the question mentions 'what else' or similar queries
+    # Handle specific queries about the image
+    if 'girl' in question or 'person' in question:
+        return f"Does the image contain a girl? {image_context.get('contains_people', 'Not sure')}"
+    
+    if 'color' in question:
+        return f"The dominant color in the image appears to be: {image_context.get('image_color', 'Unknown')}"
+    
     if 'else' in question or 'other' in question or 'additional' in question:
         additional_info = image_context.get('additional_info', 'No additional information available.')
         return f"I have recognized: {image_context['description']}. Also, {additional_info}"
