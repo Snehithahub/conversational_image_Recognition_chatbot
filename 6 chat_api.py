@@ -10,7 +10,7 @@ processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
 model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
 
 # OpenAI GPT for chatbot functionality (Replace with your OpenAI API key)
-openai.api_key = "your-openai-api-key"
+openai.api_key = "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"
 
 # Function for generating responses with OpenAI GPT
 def get_gpt_response(prompt):
