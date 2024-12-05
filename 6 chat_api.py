@@ -1,3 +1,4 @@
+
 import streamlit as st
 from transformers import CLIPProcessor, CLIPModel
 from PIL import Image
@@ -10,9 +11,8 @@ processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
 model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
 
 # OpenAI GPT for chatbot functionality (Replace with your OpenAI API key)
-openai.api_key = "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"
-
-# Function for generating responses with OpenAI GPT
+openai.api_key="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"
+#Function for generating responses with OpenAI GPT
 def get_gpt_response(prompt):
     response = openai.Completion.create(
         engine="text-davinci-003",  # or "gpt-4" for more advanced responses
